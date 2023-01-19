@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="U6b-Vx-4bR" customClass="HeaderSliderView" customModule="TMDB_Movie_App" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="360" height="256"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="pUv-9a-JA7">
+                    <rect key="frame" x="0.0" y="0.0" width="360" height="256"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="46U-Wg-ujg">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="pUv-9a-JA7" secondAttribute="bottom" id="GyS-G4-FQL"/>
+                <constraint firstItem="pUv-9a-JA7" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="KGW-NK-clG"/>
+                <constraint firstAttribute="trailing" secondItem="pUv-9a-JA7" secondAttribute="trailing" id="SCa-4K-jAS"/>
+                <constraint firstItem="pUv-9a-JA7" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="mI7-RP-Zr7"/>
+            </constraints>
+            <connections>
+                <outlet property="nowPlaying" destination="pUv-9a-JA7" id="bIe-BH-NJy"/>
+            </connections>
+            <point key="canvasLocation" x="-113" y="-1"/>
+        </collectionReusableView>
+    </objects>
+</document>
