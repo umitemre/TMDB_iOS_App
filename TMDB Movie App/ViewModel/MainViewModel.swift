@@ -12,28 +12,91 @@ import RxDataSources
 class MainViewModel {
     let useCase = MainPageUseCase()
 
-    private var _upcomingMovies = PublishSubject<[MovieResult]>()
-    var upcomingMovies: Observable<[MovieResult]> {
+    private var _mainPageMovieList = PublishSubject<[MainPageModel]>()
+    var mainPageMovieList: Observable<[MainPageModel]> {
         get {
-            return _upcomingMovies
+            return _mainPageMovieList
         }
     }
 
-    func getUpcomingMovies() {
-        self.useCase.fetchUpcomingMovies { data in
-            guard let response = data.value,
-                  let result = response.results else {
-                
-                if let error = data.error {
-                    self._upcomingMovies.onError(error)
+    func getMainPageMovieList() {
+        let dispatchGroup = DispatchGroup()
+        let mainPageModel = MainPageModel()
+
+        dispatchGroup.enter()
+        DispatchQueue.global().async {
+            self.useCase.fetchUpcomingMovies { data in
+                guard let response = data.value,
+                      let result = response.results else {
+                    
+                    if let error = data.error {
+                        mainPageModel.errors.append(error)
+                        dispatchGroup.leave()
+                        return
+                    }
+
+                    mainPageModel.errors.append(NSError())
+                    dispatchGroup.leave()
                     return
                 }
                 
-                self._upcomingMovies.onError(NSError())
+                mainPageModel.upcoming = result
+                dispatchGroup.leave()
+            }
+        }
+        
+        dispatchGroup.enter()
+
+        DispatchQueue.global().async {
+            self.useCase.fetchNowPlaying { data in
+                guard let response = data.value,
+                      let result = response.results else {
+                    
+                    if let error = data.error {
+                        mainPageModel.errors.append(error)
+                        dispatchGroup.leave()
+                        return
+                    }
+
+                    mainPageModel.errors.append(NSError())
+                    dispatchGroup.leave()
+                    return
+                }
+                
+                mainPageModel.nowPlaying = result
+                dispatchGroup.leave()
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            if mainPageModel.errors.count > 0 {
+                // TODO: Send empty error for now
+                self._mainPageMovieList.onError(NSError())
                 return
             }
 
-            self._upcomingMovies.onNext(result)
+            self._mainPageMovieList.onNext([mainPageModel])
         }
+    }
+}
+
+class MainPageModel: SectionModelType {
+    typealias Item = MovieResult
+
+    var upcoming: [MovieResult]?
+    var nowPlaying: [MovieResult]?
+    var errors: [Error] = []
+
+    var items: [MovieResult] {
+        return upcoming ?? []
+    }
+
+    required init(original: MainPageModel, items: [MovieResult]) {
+        self.upcoming = original.upcoming
+        self.nowPlaying = original.nowPlaying
+    }
+    
+    init() {
+        
     }
 }

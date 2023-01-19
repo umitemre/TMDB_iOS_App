@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class HeaderSliderView: UICollectionReusableView {
     @IBOutlet weak var nowPlaying: UICollectionView!
     
     static let identifier = "HeaderSliderView"
+
+    private let disposeBag = DisposeBag()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -18,25 +22,23 @@ class HeaderSliderView: UICollectionReusableView {
         
         self.nowPlaying.register(UINib(nibName: "NowPlayingItem", bundle: nil), forCellWithReuseIdentifier: NowPlayingItem.identifier)
         
-        self.nowPlaying.dataSource = self
         self.nowPlaying.delegate = self
     }
     
-    func bind(_ data: [MovieResult]) {
+    func bind(_ datam: [MovieResult]?) {
+        guard let data = datam else {
+            return
+        }
         
-    }
-}
+        self.nowPlaying.dataSource = nil
 
-extension HeaderSliderView : UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = self.nowPlaying.dequeueReusableCell(withReuseIdentifier: NowPlayingItem.identifier, for: indexPath) as! NowPlayingItem
-        
-        return cell
+        Observable.just(data)
+            .bind(to: self.nowPlaying.rx.items(
+                cellIdentifier: NowPlayingItem.identifier,
+                cellType: NowPlayingItem.self
+            )) { row, item, cell in
+                cell.bind(item)
+            }.disposed(by: disposeBag)
     }
 }
 

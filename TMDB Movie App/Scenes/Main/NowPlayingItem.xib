@@ -20,6 +20,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="360" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KM0-85-o83">
+                                <rect key="frame" x="0.0" y="0.0" width="360" height="256"/>
+                            </imageView>
                             <view alpha="0.43000000715255737" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v0U-qv-Pwq">
                                 <rect key="frame" x="0.0" y="0.0" width="360" height="256"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -59,12 +62,16 @@ Description</string>
                             <constraint firstAttribute="trailing" secondItem="v0U-qv-Pwq" secondAttribute="trailing" id="5Vr-sB-cM1"/>
                             <constraint firstItem="bE9-IU-Zfr" firstAttribute="leading" secondItem="0Li-og-2gz" secondAttribute="leading" constant="16" id="8NA-nn-r0m"/>
                             <constraint firstItem="v0U-qv-Pwq" firstAttribute="top" secondItem="0Li-og-2gz" secondAttribute="top" id="D11-mp-U9t"/>
+                            <constraint firstAttribute="trailing" secondItem="KM0-85-o83" secondAttribute="trailing" id="DC1-5L-Eo7"/>
                             <constraint firstItem="GkM-5x-8m6" firstAttribute="leading" secondItem="0Li-og-2gz" secondAttribute="leading" constant="16" id="DLs-tO-YZR"/>
+                            <constraint firstItem="KM0-85-o83" firstAttribute="leading" secondItem="0Li-og-2gz" secondAttribute="leading" id="PVh-GU-gwR"/>
                             <constraint firstItem="v0U-qv-Pwq" firstAttribute="top" secondItem="0Li-og-2gz" secondAttribute="top" id="UVH-mX-hZP"/>
                             <constraint firstItem="v0U-qv-Pwq" firstAttribute="leading" secondItem="0Li-og-2gz" secondAttribute="leading" id="VRF-1e-IIq"/>
                             <constraint firstAttribute="trailing" secondItem="GkM-5x-8m6" secondAttribute="trailing" constant="16" id="Wix-gj-XW7"/>
+                            <constraint firstItem="KM0-85-o83" firstAttribute="top" secondItem="0Li-og-2gz" secondAttribute="top" id="bM1-4P-RHA"/>
                             <constraint firstItem="GkM-5x-8m6" firstAttribute="top" secondItem="bE9-IU-Zfr" secondAttribute="bottom" constant="8" id="ebT-QH-OkE"/>
                             <constraint firstAttribute="trailing" secondItem="v0U-qv-Pwq" secondAttribute="trailing" id="mS6-7O-c0p"/>
+                            <constraint firstAttribute="bottom" secondItem="KM0-85-o83" secondAttribute="bottom" id="n7t-XY-Ozo"/>
                             <constraint firstAttribute="trailing" secondItem="bE9-IU-Zfr" secondAttribute="trailing" constant="16" id="oH1-nK-Onk"/>
                             <constraint firstItem="v0U-qv-Pwq" firstAttribute="leading" secondItem="0Li-og-2gz" secondAttribute="leading" id="sn0-dV-pzr"/>
                             <constraint firstAttribute="bottom" secondItem="v0U-qv-Pwq" secondAttribute="bottom" id="xFb-tD-SfS"/>
@@ -74,6 +81,11 @@ Description</string>
                 </subviews>
             </view>
             <size key="customSize" width="393" height="256"/>
+            <connections>
+                <outlet property="movieDescription" destination="GkM-5x-8m6" id="ucY-Xg-VOR"/>
+                <outlet property="moviePoster" destination="KM0-85-o83" id="UpV-JQ-Y29"/>
+                <outlet property="movieTitle" destination="bE9-IU-Zfr" id="Ddv-8B-QW2"/>
+            </connections>
             <point key="canvasLocation" x="-89.312977099236633" y="-1.4084507042253522"/>
         </collectionViewCell>
     </objects>

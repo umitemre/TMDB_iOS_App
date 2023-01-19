@@ -11,7 +11,7 @@ import RxCocoa
 import RxDataSources
 
 class MainViewController: UIViewController {
-    @IBOutlet var upcomingList: UICollectionView!
+    @IBOutlet var mainPageMovieListCollectionView: UICollectionView!
         
     let viewModel = MainViewModel()
     
@@ -20,28 +20,48 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.upcomingList.register(UINib(nibName: "UpcomingListItem", bundle: nil), forCellWithReuseIdentifier: UpcomingListItem.identifier)
+        self.mainPageMovieListCollectionView.register(UINib(nibName: "UpcomingListItem", bundle: nil), forCellWithReuseIdentifier: UpcomingListItem.identifier)
 
-        self.upcomingList.register(UINib(nibName: "HeaderSliderView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSliderView.identifier)
+        self.mainPageMovieListCollectionView.register(UINib(nibName: "HeaderSliderView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSliderView.identifier)
 
-        upcomingList.delegate = self
+        mainPageMovieListCollectionView.delegate = self
 
         self.setObservers()
     }
     
     func setObservers() {
-        viewModel.getUpcomingMovies()
-        
-        viewModel.upcomingMovies.catch { error in
-            print("An error occured. Here look: \(error.localizedDescription)")
-            return Observable.just([])
-        }.bind(to: self.upcomingList.rx.items(
-            cellIdentifier: UpcomingListItem.identifier,
-            cellType: UpcomingListItem.self)
-        ) { row, model, cell in
-            cell.bind(model)
-            cell.layer.addBorder(edge: .bottom, color: UIColor.dividerGray, thickness: 1.0)
-        }.disposed(by: disposeBag)
+        viewModel.getMainPageMovieList()
+
+        let dataSource = RxCollectionViewSectionedReloadDataSource<MainPageModel>(
+            configureCell: { dataSource, collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UpcomingListItem.identifier, for: indexPath) as! UpcomingListItem
+
+                cell.bind(item)
+                cell.layer.addBorder(edge: .bottom, color: UIColor.dividerGray, thickness: 1.0)
+
+                return cell
+            },
+            configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
+                switch(kind) {
+                case UICollectionView.elementKindSectionHeader:
+                    let cell = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSliderView.identifier, for: indexPath) as! HeaderSliderView
+
+                    cell.bind(dataSource.sectionModels[0].nowPlaying)
+                    
+                    return cell
+                default:
+                    fatalError("Unknown type of kind provided.")
+                }
+            }
+        )
+
+        viewModel.mainPageMovieList
+            .catch { error in
+                print("An error occured. Here look: \(error.localizedDescription)")
+                return Observable.just([])
+            }
+            .bind(to: self.mainPageMovieListCollectionView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
     }
 }
 
