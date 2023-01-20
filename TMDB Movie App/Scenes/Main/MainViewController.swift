@@ -11,12 +11,37 @@ import RxCocoa
 import RxDataSources
 
 class MainViewController: UIViewController {
+    typealias DataSourceModel = RxCollectionViewSectionedReloadDataSource<MainPageModel>
+
     @IBOutlet var mainPageMovieListCollectionView: UICollectionView!
         
     let viewModel = MainViewModel()
     
     private let disposeBag = DisposeBag()
     
+    private let dataSource = DataSourceModel(
+        configureCell: { dataSource, collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UpcomingListItem.identifier, for: indexPath) as! UpcomingListItem
+
+            cell.bind(item)
+            cell.layer.addBorder(edge: .bottom, color: UIColor.dividerGray, thickness: 1.0)
+
+            return cell
+        },
+        configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
+            switch(kind) {
+            case UICollectionView.elementKindSectionHeader:
+                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSliderView.identifier, for: indexPath) as! HeaderSliderView
+
+                cell.bind(dataSource.sectionModels[0].nowPlaying)
+                
+                return cell
+            default:
+                fatalError("Unknown type of kind provided.")
+            }
+        }
+    )
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,29 +56,6 @@ class MainViewController: UIViewController {
     
     func setObservers() {
         viewModel.getMainPageMovieList()
-
-        let dataSource = RxCollectionViewSectionedReloadDataSource<MainPageModel>(
-            configureCell: { dataSource, collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UpcomingListItem.identifier, for: indexPath) as! UpcomingListItem
-
-                cell.bind(item)
-                cell.layer.addBorder(edge: .bottom, color: UIColor.dividerGray, thickness: 1.0)
-
-                return cell
-            },
-            configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
-                switch(kind) {
-                case UICollectionView.elementKindSectionHeader:
-                    let cell = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSliderView.identifier, for: indexPath) as! HeaderSliderView
-
-                    cell.bind(dataSource.sectionModels[0].nowPlaying)
-                    
-                    return cell
-                default:
-                    fatalError("Unknown type of kind provided.")
-                }
-            }
-        )
 
         viewModel.mainPageMovieList
             .catch { error in
