@@ -40,10 +40,17 @@ class HeaderSliderView: UICollectionReusableView {
                 cell.bind(item)
             }.disposed(by: disposeBag)
     }
+    
+    func restoreScrollPosition(_ position: CGPoint?) {
+        guard let position = position else {
+            return
+        }
+
+        self.nowPlaying.setContentOffset(position, animated: false)
+    }
 }
 
 extension HeaderSliderView : UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height)

@@ -91,4 +91,26 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDelegate
         let height = view.frame.size.width * 32 / 45
         return CGSize(width: view.frame.size.width, height: height)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        switch(elementKind) {
+        case UICollectionView.elementKindSectionHeader:
+            let cell = view as! HeaderSliderView
+            cell.restoreScrollPosition(viewModel.nowPlayingScrollState)
+        default:
+            fatalError("Unknown type of kind provided")
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        switch(elementKind) {
+        case UICollectionView.elementKindSectionHeader:
+            let cell = view as! HeaderSliderView
+
+            // Store the current position
+            viewModel.nowPlayingScrollState = cell.nowPlaying.contentOffset
+        default:
+            fatalError("Unknown type of kind provided")
+        }
+    }
 }

@@ -26,7 +26,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qJ0-FI-kNQ">
                         <rect key="frame" x="128" y="24" width="353" height="19.666666666666671"/>
                         <attributedString key="attributedText">
-                            <fragment content="Movie Title">
+                            <fragment content="Movie">
                                 <attributes>
                                     <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <font key="NSFont" size="17" name="Helvetica-Bold"/>
@@ -75,7 +75,7 @@ Description</string>
                     <constraint firstAttribute="trailing" secondItem="qJ0-FI-kNQ" secondAttribute="trailing" constant="44" id="gQM-oS-Xow"/>
                     <constraint firstAttribute="trailing" secondItem="g3k-mM-EZ2" secondAttribute="trailing" constant="44" id="pwh-d8-46x"/>
                     <constraint firstAttribute="trailing" secondItem="TWo-ed-X5I" secondAttribute="trailing" constant="44" id="skb-lo-g5Z"/>
-                    <constraint firstItem="g3k-mM-EZ2" firstAttribute="top" secondItem="qJ0-FI-kNQ" secondAttribute="bottom" constant="8" id="woX-fE-Mmf"/>
+                    <constraint firstItem="g3k-mM-EZ2" firstAttribute="top" secondItem="qJ0-FI-kNQ" secondAttribute="bottom" priority="999" constant="8" id="woX-fE-Mmf"/>
                     <constraint firstItem="g3k-mM-EZ2" firstAttribute="leading" secondItem="fMX-7F-tHC" secondAttribute="trailing" constant="8" id="z48-1C-pLa"/>
                 </constraints>
             </collectionViewCellContentView>

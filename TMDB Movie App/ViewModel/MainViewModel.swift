@@ -18,6 +18,8 @@ class MainViewModel {
             return _mainPageMovieList
         }
     }
+    
+    var nowPlayingScrollState: CGPoint?
 
     func getMainPageMovieList() {
         let dispatchGroup = DispatchGroup()
@@ -46,7 +48,6 @@ class MainViewModel {
         }
         
         dispatchGroup.enter()
-
         DispatchQueue.global().async {
             self.useCase.fetchNowPlaying { data in
                 guard let response = data.value,
