@@ -14,11 +14,9 @@ class MainViewController: UIViewController {
     typealias DataSourceModel = RxCollectionViewSectionedReloadDataSource<MainPageModel>
 
     @IBOutlet var mainPageMovieListCollectionView: UICollectionView!
-        
-    let viewModel = MainViewModel()
     
+    private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
-    
     private let dataSource = DataSourceModel(
         configureCell: { dataSource, collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UpcomingListItem.identifier, for: indexPath) as! UpcomingListItem
@@ -51,19 +49,37 @@ class MainViewController: UIViewController {
 
         mainPageMovieListCollectionView.delegate = self
 
-        self.setObservers()
+        self.setDataObserver()
     }
     
-    func setObservers() {
-        viewModel.getMainPageMovieList()
+    func setDataObserver() {
+        // Remove existing data source (if any)
+        self.mainPageMovieListCollectionView.dataSource = nil
 
+        // Subscribe
         viewModel.mainPageMovieList
             .catch { error in
-                print("An error occured. Here look: \(error.localizedDescription)")
+                self.handleError()
                 return Observable.just([])
             }
             .bind(to: self.mainPageMovieListCollectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+    }
+    
+    func handleError() {
+        let alert = UIAlertController(
+            title: "Error",
+            message: "Please check your internet connection and try again.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Try Again", style: .default) { _ in
+            self.viewModel.getMainPageMovieList()
+
+            self.setDataObserver()
+        })
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

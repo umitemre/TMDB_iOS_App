@@ -10,7 +10,7 @@ import Result
 
 class MainPageRepository {
     func fetchUpcomingMovies(completion: @escaping (Result<ApiResponse, Error>) -> Void) {
-        NetworkLayer.getInstance()
+        NetworkLayer.shared
             .url("https://api.themoviedb.org/3/movie/upcoming")
             .makeRequest { (result: Result<ApiResponse, Error>) in
                 completion(result)
@@ -18,7 +18,7 @@ class MainPageRepository {
     }
 
     func fetchNowPlaying(completion: @escaping (Result<ApiResponse, Error>) -> Void) {
-        NetworkLayer.getInstance()
+        NetworkLayer.shared
             .url("https://api.themoviedb.org/3/movie/now_playing")
             .makeRequest { (result: Result<ApiResponse, Error>) in
                 completion(result)

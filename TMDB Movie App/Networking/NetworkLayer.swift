@@ -21,10 +21,8 @@ class NetworkLayer {
         return apiKey
     }
     
-    static func getInstance() -> NetworkLayer {
-        return NetworkLayer()
-    }
-    
+    static let shared: NetworkLayer = NetworkLayer()
+
     private init() {}
     
     func url(_ url: String) -> NetworkLayer {

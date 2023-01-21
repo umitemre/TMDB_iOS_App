@@ -12,7 +12,7 @@ import RxDataSources
 class MainViewModel {
     let useCase = MainPageUseCase()
 
-    private var _mainPageMovieList = PublishSubject<[MainPageModel]>()
+    private var _mainPageMovieList = BehaviorSubject<[MainPageModel]>(value: [])
     var mainPageMovieList: Observable<[MainPageModel]> {
         get {
             return _mainPageMovieList
@@ -21,6 +21,10 @@ class MainViewModel {
     
     var nowPlayingScrollState: CGPoint?
 
+    init() {
+        self.getMainPageMovieList()
+    }
+
     func getMainPageMovieList() {
         let dispatchGroup = DispatchGroup()
         let mainPageModel = MainPageModel()
@@ -28,47 +32,49 @@ class MainViewModel {
         dispatchGroup.enter()
         DispatchQueue.global().async {
             self.useCase.fetchUpcomingMovies { data in
+                defer {
+                    dispatchGroup.leave()
+                }
+
                 guard let response = data.value,
                       let result = response.results else {
-                    
+
                     if let error = data.error {
                         mainPageModel.errors.append(error)
-                        dispatchGroup.leave()
                         return
                     }
 
                     mainPageModel.errors.append(NSError())
-                    dispatchGroup.leave()
                     return
                 }
-                
+
                 mainPageModel.upcoming = result
-                dispatchGroup.leave()
             }
         }
-        
+
         dispatchGroup.enter()
         DispatchQueue.global().async {
             self.useCase.fetchNowPlaying { data in
+                defer {
+                    dispatchGroup.leave()
+                }
+
                 guard let response = data.value,
                       let result = response.results else {
                     
                     if let error = data.error {
                         mainPageModel.errors.append(error)
-                        dispatchGroup.leave()
                         return
                     }
 
                     mainPageModel.errors.append(NSError())
-                    dispatchGroup.leave()
                     return
                 }
                 
                 mainPageModel.nowPlaying = result
-                dispatchGroup.leave()
             }
         }
-        
+
         dispatchGroup.notify(queue: .main) {
             if mainPageModel.errors.count > 0 {
                 // TODO: Send empty error for now
